@@ -14,10 +14,10 @@ int h = glutGet(GLUT_WINDOW_HEIGHT);
 Obj square = {
     double(w/2), 
     double(h/2),
-    1,
-    10,
-    1,
-    1,
+    0,
+    0,
+    0,
+    9.8,
     10
 };
 
