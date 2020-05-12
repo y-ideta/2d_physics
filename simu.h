@@ -1,0 +1,1 @@
+void calc(Obj& obj);

@@ -20,16 +20,17 @@ void drawBaseLine(int w, int h) {
     glEnd();
 }
 
-void drawSquare(vector<vector<int> > vtxList) {
+void drawSquare(int x, int y, int size) {
     /*
-     * n角形の描画
-     * input: Glint[][]
+     * 四角形の描画
+     * input: int x, int y, int size
      * output: none
      */
     glColor3d(0.0, 1.0, 0.0); // 線の色の指定
     glBegin(GL_POLYGON); // 描画する線の種類
-    for (vector<int> v : vtxList) {
-        glVertex2i(v[0], v[1]);
-    }
+    glVertex2i(x+size, y-size);
+    glVertex2i(x+size, y+size);
+    glVertex2i(x-size, y+size);
+    glVertex2i(x-size, y-size);
     glEnd();
 }
