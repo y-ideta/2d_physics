@@ -5,10 +5,10 @@
 #include "main.h"
 #include "draw.h"
 #define G_NUM 9.8 // 重力加速度
-#define TIME_STEP 1 // 1秒間に何秒進めるか
+#define TIME_STEP 5 // 1秒間に何秒進めるか
 #define FRAME_RATE 1/60 // 描画の関数が呼ばれる時間
 #define TIME FRAME_RATE * TIME_STEP
-#define E_NUM 0.7 // 反発係数
+#define E_NUM 0.8 // 反発係数
 
 void calc(Obj& obj) {
     /*
@@ -20,13 +20,13 @@ void calc(Obj& obj) {
     if ((obj.y+obj.size) >= h) {
         float diff = h - (obj.y + obj.size);
         obj.vy = E_NUM * -obj.vy;
-        obj.y = h - obj.size;
+        obj.y = h - obj.size + diff; // diffを足してやらないとはみ出た分が意図しない損失になる
     }
 
     if ((obj.y-obj.size) <= 0) {
         float diff = obj.y - obj.size;
         obj.vy = E_NUM * -obj.vy;
-        obj.y = 0+obj.size;
+        obj.y = obj.size - diff;
     }
 
     obj.vy += obj.ay * TIME;
