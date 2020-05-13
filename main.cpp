@@ -11,32 +11,48 @@ using namespace std;
 int w = glutGet(GLUT_WINDOW_WIDTH);
 int h = glutGet(GLUT_WINDOW_HEIGHT);
 
+vector<Obj> squareList = {
+    {
+        double(w/3), 
+        double(h/2),
+        0,
+        0,
+        0,
+        9.8,
+        11
+    },
+};
 Obj square = {
-    double(w/2), 
+    double(w/3), 
     double(h/2),
     0,
     0,
     0,
     9.8,
-    10
+    11
 };
+
 
 void display(void) {
     int w = glutGet(GLUT_WINDOW_WIDTH);
     int h = glutGet(GLUT_WINDOW_HEIGHT);
     glClear(GL_COLOR_BUFFER_BIT); // ウィンドウの塗り潰し
 
-    calc(square);
+    calc();
     drawBaseLine(w, h); 
+
     glFlush(); // 処理の実行
+    glutSwapBuffers(); // 描画をいい感じにしてくれるやつ
 }
 
 void resize(int w, int h) {
     glViewport(0, 0, w, h);
     glLoadIdentity();
     glOrtho(-0.5, (GLdouble)w - 0.5, (GLdouble)h - 0.5, -0.5, -1.0, 1.0);
-    square.x = w/2;
-    square.y = w/2;
+    squareList[0].x = w/2;
+    squareList[0].y = h/2;
+    square.x = w/3;
+    square.y = h/2;
 }
 
 void init(void) {
@@ -59,7 +75,6 @@ int main(int argc, char * argv[]) {
     glutDisplayFunc(display); // 画面表示を行う関数を受け取る関数
     glutReshapeFunc(resize);
     glutMouseFunc(mouse); // マウスイベントの取得
-    glutMotionFunc(motion); // ラバーバンド
     glutIdleFunc(idle); 
     init(); // 初期化の関数をここで呼ぶ
     glutMainLoop(); // 無限ループ(イベントの待ち受け状態にする)

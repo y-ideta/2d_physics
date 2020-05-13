@@ -1,1 +1,1 @@
-void calc(Obj& obj);
+void calc();
