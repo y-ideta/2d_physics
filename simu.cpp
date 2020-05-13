@@ -17,13 +17,13 @@ void calc(Obj& obj) {
     int w = glutGet(GLUT_WINDOW_WIDTH);
     int h = glutGet(GLUT_WINDOW_HEIGHT);
 
-    if ((obj.y+obj.size) >= h) {
+    if ((obj.y+obj.size) >= h) { // 床に当たった時
         float diff = h - (obj.y + obj.size);
         obj.vy = E_NUM * -obj.vy;
         obj.y = h - obj.size + diff; // diffを足してやらないとはみ出た分が意図しない損失になる
     }
 
-    if ((obj.y-obj.size) <= 0) {
+    if ((obj.y-obj.size) <= 0) { // 天井に当たった時
         float diff = obj.y - obj.size;
         obj.vy = E_NUM * -obj.vy;
         obj.y = obj.size - diff;
