@@ -11,26 +11,7 @@ using namespace std;
 int w = glutGet(GLUT_WINDOW_WIDTH);
 int h = glutGet(GLUT_WINDOW_HEIGHT);
 
-vector<Obj> squareList = {
-    {
-        double(w/3), 
-        double(h/2),
-        0,
-        0,
-        0,
-        9.8,
-        11
-    },
-};
-Obj square = {
-    double(w/3), 
-    double(h/2),
-    0,
-    0,
-    0,
-    9.8,
-    11
-};
+vector<Obj> squareList;
 
 
 void display(void) {
@@ -49,10 +30,6 @@ void resize(int w, int h) {
     glViewport(0, 0, w, h);
     glLoadIdentity();
     glOrtho(-0.5, (GLdouble)w - 0.5, (GLdouble)h - 0.5, -0.5, -1.0, 1.0);
-    squareList[0].x = w/2;
-    squareList[0].y = h/2;
-    square.x = w/3;
-    square.y = h/2;
 }
 
 void init(void) {
