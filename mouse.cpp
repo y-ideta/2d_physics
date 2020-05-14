@@ -20,7 +20,9 @@ void mouse(int button, int state, int x, int y) {
     extern vector<Obj> squareList;
     switch (button) {
         case GLUT_LEFT_BUTTON:
+            if (state == GLUT_UP) break; 
             squareList.push_back(square);
+            printf("\nnum: %d\n", int(squareList.size()));
             break;
         case GLUT_MIDDLE_BUTTON:
             break;
@@ -30,5 +32,4 @@ void mouse(int button, int state, int x, int y) {
             break;
     }
 
-    printf(" at (%d, %d)\n", x, y);
 }

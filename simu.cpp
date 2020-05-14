@@ -21,22 +21,59 @@ void calc() {
      */
     int w = glutGet(GLUT_WINDOW_WIDTH);
     int h = glutGet(GLUT_WINDOW_HEIGHT);
+
     extern vector<Obj> squareList;
-    for (Obj &obj : squareList) {
-        if ((obj.y+obj.size) >= h) { // 床に当たった時
-            float diff = h - (obj.y + obj.size);
-            obj.vy = E_NUM * -obj.vy;
-            obj.y = h - obj.size + diff; // diffを足してやらないとはみ出た分が意図しない損失になる
+
+    for (int i =0; i < int(squareList.size()); i++) {
+        Obj &obj1 = squareList[i];
+
+        if ((obj1.y + obj1.size) >= h) { // 床に当たった時
+            float diff = h - (obj1.y + obj1.size);
+            obj1.vy = E_NUM * -obj1.vy;
+            obj1.y = h - obj1.size + diff; // diffを足してやらないとはみ出た分が意図しない損失になる
         }
 
-        if ((obj.y-obj.size) <= 0) { // 天井に当たった時
-            float diff = obj.y - obj.size;
-            obj.vy = E_NUM * -obj.vy;
-            obj.y = obj.size - diff;
+        if ((obj1.y - obj1.size) <= 0) { // 天井に当たった時
+            float diff = obj1.y - obj1.size;
+            obj1.vy = E_NUM * -obj1.vy;
+            obj1.y = obj1.size - diff;
         }
 
-        obj.vy += obj.ay * TIME;
-        obj.y += obj.vy * TIME; // dx = v dt
-        drawSquare(obj.x, obj.y, obj.size);
+        obj1.vy += obj1.ay * TIME;
+        obj1.y += obj1.vy * TIME; // dx = v dt
+        
+        // xe1: x end of obj1
+        double xe1 = obj1.x + obj1.size;
+        double ye1 = obj1.y + obj1.size;
+
+        for (int j = i+1; j < int(squareList.size()); j++) { 
+            // 自分以外の要素を1個ずつ見ていく
+            // TODO: 複数同時に衝突した場合は厳密には
+            // 違う挙動になるはずなので改めて考える必要あり
+
+            Obj &obj2 = squareList[j];
+
+            // x座標が衝突しうる位置にあるかチェック
+            // なければcontinueで次に行く
+            double xs2 = obj2.x - obj2.size;
+            double xe2 = obj2.x + obj2.size;
+            if ( !((xe1 >= xs2 && xe1 <= (xe2 + (obj1.size * 2)))) )  continue;
+
+            double ys2 = obj2.y - obj2.size;
+            double ye2 = obj2.y + obj2.size;
+            if ( !((ye1 >= ys2 && ye1 <= (ye2 + (obj1.size * 2)))) ) continue;
+            double ydiff = ye1 - ys2; 
+            // ここまで来たら衝突してると考えて処理する
+            printf("hit\n");
+            printf("diff: %f\n", ydiff);
+            fflush(stdout);
+            printf("v1b: %f\n", obj1.vy);
+            printf("v2b: %f\n", obj2.vy);
+            obj1.vy = -(obj1.vy*(1-E_NUM) + obj2.vy*(1+E_NUM)) / 2;
+            obj2.vy = -(obj1.vy*(1+E_NUM) + obj2.vy*(1-E_NUM)) / 2;
+            printf("v1a: %f\n", obj1.vy);
+            printf("v2a: %f\n", obj2.vy);
+        }
+        drawSquare(obj1.x, obj1.y, obj1.size);
     }
 }
