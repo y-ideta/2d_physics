@@ -65,7 +65,6 @@ void calc() {
             if ( !((ye1 >= ys2 && ye1 <= (ye2 + (obj1.size * 2)))) ) continue;
 
             // ここまで来たら衝突してると考えて処理する
-            fflush(stdout);
             double ydiff;
             double v1d = (obj1.vy*(1-E_NUM) + obj2.vy*(1+E_NUM)) / 2;
             double v2d = (obj1.vy*(1+E_NUM) + obj2.vy*(1-E_NUM)) / 2;
@@ -78,7 +77,6 @@ void calc() {
                 ydiff = ye2-ys1;
                 obj2.y -= ydiff;
             }
-            fflush(stdout);
         }
         drawSquare(obj1.x, obj1.y, obj1.size);
     }
