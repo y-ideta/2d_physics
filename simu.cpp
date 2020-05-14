@@ -44,6 +44,7 @@ void calc() {
         
         // xe1: x end of obj1
         double xe1 = obj1.x + obj1.size;
+        double ys1 = obj1.y - obj1.size;
         double ye1 = obj1.y + obj1.size;
 
         for (int j = i+1; j < int(squareList.size()); j++) { 
@@ -62,17 +63,22 @@ void calc() {
             double ys2 = obj2.y - obj2.size;
             double ye2 = obj2.y + obj2.size;
             if ( !((ye1 >= ys2 && ye1 <= (ye2 + (obj1.size * 2)))) ) continue;
-            double ydiff = ye1 - ys2; 
+
             // ここまで来たら衝突してると考えて処理する
-            printf("hit\n");
-            printf("diff: %f\n", ydiff);
             fflush(stdout);
-            printf("v1b: %f\n", obj1.vy);
-            printf("v2b: %f\n", obj2.vy);
-            obj1.vy = -(obj1.vy*(1-E_NUM) + obj2.vy*(1+E_NUM)) / 2;
-            obj2.vy = -(obj1.vy*(1+E_NUM) + obj2.vy*(1-E_NUM)) / 2;
-            printf("v1a: %f\n", obj1.vy);
-            printf("v2a: %f\n", obj2.vy);
+            double ydiff;
+            double v1d = (obj1.vy*(1-E_NUM) + obj2.vy*(1+E_NUM)) / 2;
+            double v2d = (obj1.vy*(1+E_NUM) + obj2.vy*(1-E_NUM)) / 2;
+            obj1.vy = v1d;
+            obj2.vy = v2d;
+            if(obj1.y <= obj2.y) {
+                ydiff = ye1 - ys2;
+                obj1.y -= ydiff;
+            } else {
+                ydiff = ye2-ys1;
+                obj2.y -= ydiff;
+            }
+            fflush(stdout);
         }
         drawSquare(obj1.x, obj1.y, obj1.size);
     }
