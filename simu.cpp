@@ -14,10 +14,13 @@
 
 using namespace std;
 
+void updatePosByWall(Obj& obj, int w, int h);
+void updatePosByOtherObj(Obj& obj1, Obj& obj2);
+
 
 void calc() {
     /*
-     * 重力による変位のみ計算
+     * 壁と他オブジェクトとの衝突を計算
      */
     int w = glutGet(GLUT_WINDOW_WIDTH);
     int h = glutGet(GLUT_WINDOW_HEIGHT);
@@ -26,26 +29,9 @@ void calc() {
 
     for (int i =0; i < int(squareList.size()); i++) {
         Obj &obj1 = squareList[i];
-
-        if ((obj1.y + obj1.size) >= h) { // 床に当たった時
-            float diff = h - (obj1.y + obj1.size);
-            obj1.vy = E_NUM * -obj1.vy;
-            obj1.y = h - obj1.size + diff; // diffを足してやらないとはみ出た分が意図しない損失になる
-        }
-
-        if ((obj1.y - obj1.size) <= 0) { // 天井に当たった時
-            float diff = obj1.y - obj1.size;
-            obj1.vy = E_NUM * -obj1.vy;
-            obj1.y = obj1.size - diff;
-        }
-
-        obj1.vy += obj1.ay * TIME;
-        obj1.y += obj1.vy * TIME; // dx = v dt
         
-        // xe1: x end of obj1
-        double xe1 = obj1.x + obj1.size;
-        double ys1 = obj1.y - obj1.size;
-        double ye1 = obj1.y + obj1.size;
+        // 壁の判定
+        updatePosByWall(obj1, w, h);
 
         for (int j = i+1; j < int(squareList.size()); j++) { 
             /* 
@@ -54,31 +40,53 @@ void calc() {
             * 違う挙動になるはずなので改めて考える必要あり
             */
             Obj &obj2 = squareList[j];
-
-            // x座標が衝突しうる位置にあるかチェック
-            // なければcontinueで次に行く
-            double xs2 = obj2.x - obj2.size;
-            double xe2 = obj2.x + obj2.size;
-            if ( !((xe1 >= xs2 && xe1 <= (xe2 + (obj1.size * 2)))) )  continue;
-
-            double ys2 = obj2.y - obj2.size;
-            double ye2 = obj2.y + obj2.size;
-            if ( !((ye1 >= ys2 && ye1 <= (ye2 + (obj1.size * 2)))) ) continue;
-
-            // ここまで来たら衝突してると考えて処理する
-            double ydiff;
-            double v1d = (obj1.vy*(1-E_NUM) + obj2.vy*(1+E_NUM)) / 2;
-            double v2d = (obj1.vy*(1+E_NUM) + obj2.vy*(1-E_NUM)) / 2;
-            obj1.vy = v1d;
-            obj2.vy = v2d;
-            if(obj1.y <= obj2.y) {
-                ydiff = ye1 - ys2;
-                obj1.y -= ydiff;
-            } else {
-                ydiff = ye2-ys1;
-                obj2.y -= ydiff;
-            }
+            // 他オブジェクトの判定
+            updatePosByOtherObj(obj1, obj2);
         }
         drawSquare(obj1.x, obj1.y, obj1.size);
+    }
+}
+
+void updatePosByWall(Obj& obj, int w, int h) {
+
+    if ((obj.y + obj.size) >= h) { // 床に当たった時
+        float diff = h - (obj.y + obj.size);
+        obj.vy = E_NUM * -obj.vy;
+        obj.y = h - obj.size + diff; // diffを足してやらないとはみ出た分が意図しない損失になる
+    }
+
+    if ((obj.y - obj.size) <= 0) { // 天井に当たった時
+        float diff = obj.y - obj.size;
+        obj.vy = E_NUM * -obj.vy;
+        obj.y = obj.size - diff;
+    }
+
+    obj.vy += obj.ay * TIME;
+    obj.y += obj.vy * TIME; // dx = v dt
+}
+
+void updatePosByOtherObj(Obj& obj1, Obj& obj2) {
+    // x座標が衝突しうる位置にあるかチェック
+    // なければcontinueで次に行く
+    double xs2 = obj2.x - obj2.size;
+    double xe2 = obj2.x + obj2.size;
+    if ( !(((obj1.x + obj1.size) >= xs2 && (obj1.x + obj1.size) <= (xe2 + (obj1.size * 2)))) )  return;
+
+    double ys2 = obj2.y - obj2.size;
+    double ye2 = obj2.y + obj2.size;
+    if ( !(((obj1.y + obj1.size) >= ys2 && (obj1.y + obj1.size) <= (ye2 + (obj1.size * 2)))) ) return;
+
+    // ここまで来たら衝突してると考えて処理する
+    double ydiff;
+    double v1d = (obj1.vy*(1-E_NUM) + obj2.vy*(1+E_NUM)) / 2;
+    double v2d = (obj1.vy*(1+E_NUM) + obj2.vy*(1-E_NUM)) / 2;
+    obj1.vy = v1d;
+    obj2.vy = v2d;
+    if(obj1.y <= obj2.y) {
+        ydiff = (obj1.y + obj1.size) - ys2;
+        obj1.y -= ydiff;
+    } else {
+        ydiff = ye2-(obj1.y - obj1.size);
+        obj2.y -= ydiff;
     }
 }
