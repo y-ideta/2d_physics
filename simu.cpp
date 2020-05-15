@@ -7,7 +7,7 @@
 #include "draw.h"
 
 #define G_NUM 9.8 // 重力加速度
-#define TIME_STEP 5 // 1秒間に何秒進めるか
+#define TIME_STEP 10 // 1秒間に何秒進めるか
 #define FRAME_RATE 1/60 // 描画の関数が呼ばれる時間
 #define TIME FRAME_RATE * TIME_STEP
 #define E_NUM 0.8 // 反発係数
@@ -48,10 +48,11 @@ void calc() {
         double ye1 = obj1.y + obj1.size;
 
         for (int j = i+1; j < int(squareList.size()); j++) { 
-            // 自分以外の要素を1個ずつ見ていく
-            // TODO: 複数同時に衝突した場合は厳密には
-            // 違う挙動になるはずなので改めて考える必要あり
-
+            /* 
+            * 自分以外の要素を1個ずつ見ていく
+            * TODO: 複数同時に衝突した場合は厳密には
+            * 違う挙動になるはずなので改めて考える必要あり
+            */
             Obj &obj2 = squareList[j];
 
             // x座標が衝突しうる位置にあるかチェック
