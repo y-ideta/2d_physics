@@ -1,9 +1,11 @@
+#include <stdlib.h>
 #include <vector>
 #include <GLUT/glut.h>
 
 #include "main.h"
 #include "draw.h"
 #include "mouse.h"
+#include "keyboard.h"
 #include "simu.h"
 
 using namespace std;
@@ -52,6 +54,7 @@ int main(int argc, char * argv[]) {
     glutDisplayFunc(display); // 画面表示を行う関数を受け取る関数
     glutReshapeFunc(resize);
     glutMouseFunc(mouse); // マウスイベントの取得
+    glutKeyboardFunc(keyboard);
     glutIdleFunc(idle); 
     init(); // 初期化の関数をここで呼ぶ
     glutMainLoop(); // 無限ループ(イベントの待ち受け状態にする)

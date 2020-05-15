@@ -49,20 +49,41 @@ void calc() {
 
 void updatePosByWall(Obj& obj, int w, int h) {
 
-    if ((obj.y + obj.size) >= h) { // 床に当たった時
+    // 床に当たった時
+    if ((obj.y + obj.size) >= h) {
         float diff = (obj.y + obj.size) - h;
         obj.vy = E_NUM * -obj.vy;
-        obj.y -= diff; // diffを足してやらないとはみ出た分が意図しない損失になる
+
+        // diffを足してやらないとはみ出た分が意図しない損失になる
+        obj.y -= diff;
     }
 
-    if ((obj.y - obj.size) <= 0) { // 天井に当たった時
+    // 天井に当たった時
+    if ((obj.y - obj.size) <= 0) {
         float diff = obj.y - obj.size;
         obj.vy = E_NUM * -obj.vy;
         obj.y -= diff;
     }
 
+    // 右壁に当たった時
+    if ((obj.x + obj.size) >= w) {
+        float diff = (obj.x + obj.size) - w;
+        obj.vx = E_NUM * -obj.vx;
+        obj.x -= diff;
+    }
+
+    // 左壁に当たった時
+    if ((obj.x + obj.size) <= 0) {
+        float diff = obj.x - obj.size;
+        obj.vx = E_NUM * -obj.vx;
+        obj.x -= diff;
+    }
+
     obj.vy += obj.ay * TIME;
-    obj.y += obj.vy * TIME; // dx = v dt
+    obj.y += obj.vy * TIME;
+
+    obj.vx += obj.ax * TIME;
+    obj.x += obj.vx * TIME;
 }
 
 void updatePosByOtherObj(Obj& obj1, Obj& obj2) {
