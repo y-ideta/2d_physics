@@ -25,21 +25,21 @@ void calc() {
     int w = glutGet(GLUT_WINDOW_WIDTH);
     int h = glutGet(GLUT_WINDOW_HEIGHT);
 
-    extern vector<Obj> squareList;
+    extern vector<Obj> square_list;
 
-    for (int i =0; i < int(squareList.size()); i++) {
-        Obj &obj1 = squareList[i];
+    for (int i =0; i < int(square_list.size()); i++) {
+        Obj &obj1 = square_list[i];
         
         // 壁の判定
         updatePosByWall(obj1, w, h);
 
-        for (int j = i+1; j < int(squareList.size()); j++) { 
+        for (int j = i+1; j < int(square_list.size()); j++) { 
             /* 
             * 自分以外の要素を1個ずつ見ていく
             * TODO: 複数同時に衝突した場合は厳密には
             * 違う挙動になるはずなので改めて考える必要あり
             */
-            Obj &obj2 = squareList[j];
+            Obj &obj2 = square_list[j];
             // 他オブジェクトの判定
             updatePosByOtherObj(obj1, obj2);
         }
@@ -48,7 +48,6 @@ void calc() {
 }
 
 void updatePosByWall(Obj& obj, int w, int h) {
-
     // 床に当たった時
     if ((obj.y + obj.size) >= h) {
         float diff = (obj.y + obj.size) - h;
@@ -98,16 +97,16 @@ void updatePosByOtherObj(Obj& obj1, Obj& obj2) {
     if ( !(((obj1.y + obj1.size) >= ys2 && (obj1.y + obj1.size) <= (ye2 + (obj1.size * 2)))) ) return;
 
     // ここまで来たら衝突してると考えて処理する
-    double ydiff;
+    double diff_y;
     double v1d = (obj1.vy*(1-E_NUM) + obj2.vy*(1+E_NUM)) / 2;
     double v2d = (obj1.vy*(1+E_NUM) + obj2.vy*(1-E_NUM)) / 2;
     obj1.vy = v1d;
     obj2.vy = v2d;
     if(obj1.y <= obj2.y) {
-        ydiff = (obj1.y + obj1.size) - ys2;
-        obj1.y -= ydiff;
+        diff_y = (obj1.y + obj1.size) - ys2;
+        obj1.y -= diff_y;
     } else {
-        ydiff = ye2-(obj1.y - obj1.size);
-        obj2.y -= ydiff;
+        diff_y = ye2-(obj1.y - obj1.size);
+        obj2.y -= diff_y;
     }
 }

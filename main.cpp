@@ -13,7 +13,18 @@ using namespace std;
 int w = glutGet(GLUT_WINDOW_WIDTH);
 int h = glutGet(GLUT_WINDOW_HEIGHT);
 
-vector<Obj> squareList;
+vector<Obj> square_list = {
+    {
+        // padding
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+    }
+};
 
 
 void display(void) {
@@ -54,6 +65,7 @@ int main(int argc, char * argv[]) {
     glutDisplayFunc(display); // 画面表示を行う関数を受け取る関数
     glutReshapeFunc(resize);
     glutMouseFunc(mouse); // マウスイベントの取得
+    glutMotionFunc(motion); // マウスイベントの取得
     glutKeyboardFunc(keyboard);
     glutIdleFunc(idle); 
     init(); // 初期化の関数をここで呼ぶ

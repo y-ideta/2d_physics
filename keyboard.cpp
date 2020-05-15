@@ -7,10 +7,10 @@ using namespace std;
 
 void keyboard(unsigned char key, int x, int y)
 {
-    extern vector<Obj> squareList;
+    extern vector<Obj> square_list;
     switch (key) {
         case 'c':
-            squareList.clear(); 
+            square_list.clear(); 
             break;
         case 'q':
         case 'Q':
