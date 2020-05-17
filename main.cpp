@@ -12,19 +12,10 @@ using namespace std;
 
 int w = glutGet(GLUT_WINDOW_WIDTH);
 int h = glutGet(GLUT_WINDOW_HEIGHT);
+int drag_start_x, drag_start_y, mouse_x, mouse_y;
+int draged_idx = -1;
 
-vector<Obj> square_list = {
-    {
-        // padding
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-    }
-};
+vector<Obj> square_list;
 
 
 void display(void) {
@@ -34,6 +25,7 @@ void display(void) {
 
     calc();
     drawBaseLine(w, h); 
+    drawArrow(drag_start_x, drag_start_y, mouse_x, mouse_y);
 
     glFlush(); // 処理の実行
     glutSwapBuffers(); // 描画をいい感じにしてくれるやつ
